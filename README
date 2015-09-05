@@ -1,0 +1,66 @@
+libpfxtree
+==========
+
+Delwink prefix tree (trie) library
+
+What's this for?
+----------------
+
+This was written for use with Delwink's LiberTI encoder to find keywords in
+source lines, but it is a fairly standard implementation of the
+well-established "trie" structure, also called a prefix tree.
+
+The purpose of a trie structure is to function as an efficient dictionary
+registry. New words are added to the dictionary, and the dictionary is searched
+one letter at a time to find the quickest route to the end of the desired word,
+as opposed to checking string equality for each string in the dictionary which
+is slow and inefficient on the CPU. Trie structures can be more memory
+efficient that a static string dictionary as well, because any words that share
+the same starting characters (prefix) will share the same memory for those
+characters. This does come at a cost for dictionaries with words that are
+nothing alike, because each character in the dictionary is more than 1 byte (24
+bytes each on my implementation) since it must keep track of what characters
+are adjacent to it, and this implementation of the structure allows storage of
+one integer as data for complete words (used in LiberTI's encoder to determine
+which token to replace the keyword with).
+
+Many implementations of this structure exist, but this is Delwink's preferred
+implementation since it follows Delwink's standards and development styles.
+
+Build
+-----
+
+libpfxtree uses the GNU build process. You can compile it with the following
+steps:
+
+    $ ./autogen.sh
+	$ ./configure
+	$ make
+
+Install
+-------
+
+After building (see above), you can install the library with this:
+
+    # make install
+
+Hacking
+-------
+
+libpfxtree uses the GNU coding style for C and follows a strict 79-column limit
+in its source code. Indentations are two spaces, and tab characters are eight
+spaces. It is polite to use a tab character any time eight spaces would be used
+to indent, but it is not required.
+
+To submit a patch, [submit your diff to Delwink][1], or use GitHub's pull
+request system.
+
+License
+-------
+
+libpfxtree is free software, released under the terms of version 3 of the GNU
+Affero General Public License. You are free to copy, modify, and redistribute
+this software and use it for whatever purpose. See [COPYING](COPYING) for more
+details.
+
+[1]: mailto:contribute@delwink.com
