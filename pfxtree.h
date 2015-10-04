@@ -17,8 +17,8 @@
 
 /**
  * @file pfxtree.h
- * @version 0.0
- * @date 09/05/2015
+ * @version 0.1
+ * @date 10/04/2015
  * @author David McMackins II
  * @brief Delwink prefix tree (trie) library
  */
@@ -44,16 +44,23 @@ enum pt_error
   PT_EALLOC = -1
 };
 
+union _pt_data
+{
+  int i;
+  void *p;
+};
+
 /**
  * @brief A node in a prefix tree.
  */
-typedef struct trie
+typedef struct _pt_trie
 {
   char ch;
-  int data;
+  char type;
+  union _pt_data data;
 
-  struct trie *children;
-  struct trie *next;
+  struct _pt_trie *children;
+  struct _pt_trie *next;
 } PrefixTree;
 
 /**
@@ -71,7 +78,7 @@ void
 pt_free (PrefixTree *self);
 
 /**
- * @brief Adds a new word to a prefix tree.
+ * @brief Adds a new word to a prefix tree with integer data.
  * @param self The tree to which to add the word.
  * @param word The word to be added.
  * @param data A number to be associated with the word.
@@ -81,12 +88,38 @@ int
 pt_add (PrefixTree *self, const char *word, int data);
 
 /**
- * @brief Gets the data from a prefix tree node.
+ * @brief Adds a new word to a prefix tree with pointer data.
+ * @param self The tree to which to add the word.
+ * @param word The word to be added.
+ * @param data A pointer to be associated with the word.
+ * @return Nonzero if an error occurred.
+ */
+int
+pt_add_p (PrefixTree *self, const char *word, void *data);
+
+/**
+ * @brief Gets the integer data from a prefix tree node.
  * @param self The node from which to get the data.
  * @return self's data (default 0).
  */
 int
 pt_data (const PrefixTree *self);
+
+/**
+ * @brief Gets the pointer data from a prefix tree node.
+ * @param self The node from which to get the data.
+ * @return self's data (default NULL).
+ */
+void *
+pt_data_p (const PrefixTree *self);
+
+/**
+ * @brief Gets the type of the data stored in the prefix tree node.
+ * @param self The node whose type is to be examined.
+ * @return 'i' if integer, 'p' if pointer, or '\0' if no data.
+ */
+char
+pt_data_type (const PrefixTree *self);
 
 /**
  * @brief Searches for a word in a prefix tree.

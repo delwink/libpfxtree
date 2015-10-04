@@ -18,7 +18,7 @@ is slow and inefficient on the CPU. Trie structures can be more memory
 efficient that a static string dictionary as well, because any words that share
 the same starting characters (prefix) will share the same memory for those
 characters. This does come at a cost for dictionaries with words that are
-nothing alike, because each character in the dictionary is more than 1 byte (24
+nothing alike, because each character in the dictionary is more than 1 byte (32
 bytes each on my implementation) since it must keep track of what characters
 are adjacent to it, and this implementation of the structure allows storage of
 one integer as data for complete words (used in LiberTI's encoder to determine

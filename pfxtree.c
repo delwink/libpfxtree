@@ -34,7 +34,8 @@ pt_new ()
     return NULL;
 
   self->ch = '\0';
-  self->data = 0;
+  self->type = '\0';
+  self->data.i = 0;
   self->children = NULL;
   self->next = NULL;
 
@@ -80,8 +81,8 @@ get_child_by_ch (const PrefixTree *self, const char ch)
   return NULL;
 }
 
-int
-pt_add (PrefixTree *self, const char *word, int data)
+static int
+add (PrefixTree *self, const char *word, union _pt_data data, char type)
 {
   int rc = 0;
   PrefixTree *node = self;
@@ -128,14 +129,43 @@ pt_add (PrefixTree *self, const char *word, int data)
     }
 
   node->data = data;
+  node->type = type;
 
   return rc;
 }
 
 int
+pt_add (PrefixTree *self, const char *word, int data)
+{
+  union _pt_data d;
+  d.i = data;
+  return add (self, word, d, 'i');
+}
+
+int
+pt_add_p (PrefixTree *self, const char *word, void *data)
+{
+  union _pt_data d;
+  d.p = data;
+  return add (self, word, d, 'p');
+}
+
+int
 pt_data (const PrefixTree *self)
 {
-  return self->data;
+  return self->data.i;
+}
+
+void *
+pt_data_p (const PrefixTree *self)
+{
+  return self->data.p;
+}
+
+char
+pt_data_type (const PrefixTree *self)
+{
+  return self->type;
 }
 
 const PrefixTree *
