@@ -176,19 +176,7 @@ pt_search (const PrefixTree *root, const char *word)
 
   for (i = 0; i <= len; ++i)
     {
-      PrefixTree *child;
-      pt_child_foreach (node, child)
-	{
-	  if (word[i] == child->ch)
-	    {
-	      node = child;
-	      break;
-	    }
-	  else if (NULL == child->next)
-	    {
-	      node = NULL;
-	    }
-	}
+      node = get_child_by_ch (node, word[i]);
 
       if (NULL == node)
 	return NULL;
