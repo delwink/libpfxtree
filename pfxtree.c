@@ -45,11 +45,20 @@ pt_new ()
 void
 pt_free (PrefixTree *self)
 {
+  pt_deep_free (self, false);
+}
+
+void
+pt_deep_free (PrefixTree *self, bool free_data)
+{
   PrefixTree *child, *next = NULL;
   for (child = self->children; child != NULL; child = next)
     {
+      if (free_data && 'p' == child->type && child->data.p != NULL)
+	free (child->data.p);
+
       next = child->next;
-      pt_free (child);
+      pt_deep_free (child, free_data);
     }
 
   free (self);

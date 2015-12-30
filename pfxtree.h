@@ -17,14 +17,16 @@
 
 /**
  * @file pfxtree.h
- * @version 0.1
- * @date 10/04/2015
+ * @version 0.2
+ * @date 12/30/2015
  * @author David McMackins II
  * @brief Delwink prefix tree (trie) library
  */
 
 #ifndef DELWINK_PFXTREE_H
 #define DELWINK_PFXTREE_H
+
+#include <stdbool.h>
 
 #ifdef __cplusplus
 # define __BEGIN_DECLS extern "C" {
@@ -76,6 +78,15 @@ pt_new (void);
  */
 void
 pt_free (PrefixTree *self);
+
+/**
+ * @brief Frees an allocated prefix tree (and its child nodes) and optionally
+ * its referenced data.
+ * @param self The tree to free.
+ * @param free_data Whether to free memory pointed to by the data (if pointer).
+ */
+void
+pt_deep_free (PrefixTree *self, bool free_data);
 
 /**
  * @brief Adds a new word to a prefix tree with integer data.
