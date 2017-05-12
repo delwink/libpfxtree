@@ -182,8 +182,25 @@ pt_del(PrefixTree *self, const char *word)
 	while (p->parent != NULL && num_children(p->parent) == 1)
 		p = p->parent;
 
-	if (!p->parent)
+	if (p->parent)
+	{
+		if (p == p->parent->children)
+		{
+			p->parent->children = p->next;
+		}
+		else
+		{
+			PrefixTree *child = p->parent->children;
+			while (child->next != p)
+				child = child->next;
+
+			child->next = p->next;
+		}
+	}
+	else
+	{
 		p = p->children;
+	}
 
 	pt_deep_free(p, true);
 	return 0;
