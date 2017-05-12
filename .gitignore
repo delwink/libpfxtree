@@ -32,7 +32,6 @@ autom4te.cache
 m4/
 libtool
 src/.dirstamp
-Makefile
 Makefile.in
 aclocal.m4
 configure
