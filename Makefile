@@ -32,3 +32,6 @@ install: libpfxtree.so
 	install -m644 pfxtree.pc $(PKGCONFIGDIR)/pfxtree.pc
 	ln -sf $(LIBDIR)/libpfxtree.so.$(VERSION) $(LIBDIR)/libpfxtree.so.$(MAJOR)
 	ln -sf $(LIBDIR)/libpfxtree.so.$(VERSION) $(LIBDIR)/libpfxtree.so
+
+clean:
+	rm -f *.o *.a *.so pfxtree-test
