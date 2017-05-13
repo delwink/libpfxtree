@@ -58,8 +58,8 @@ union _pt_data
  */
 typedef struct _pt_trie
 {
-	char ch;
-	char type;
+	int ch;
+	int type;
 	union _pt_data data;
 
 	struct _pt_trie *parent;
@@ -140,7 +140,7 @@ pt_data_p(const PrefixTree *self);
  * @param self The node whose type is to be examined.
  * @return 'i' if integer, 'p' if pointer, or '\0' if no data.
  */
-char
+int
 pt_data_type(const PrefixTree *self);
 
 /**

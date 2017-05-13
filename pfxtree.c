@@ -76,7 +76,7 @@ get_last_child(const PrefixTree *self)
 }
 
 static PrefixTree *
-get_child_by_ch(const PrefixTree *self, const char ch)
+get_child_by_ch(const PrefixTree *self, const int ch)
 {
 	PrefixTree *child;
 	pt_child_foreach(self, child)
@@ -89,7 +89,7 @@ get_child_by_ch(const PrefixTree *self, const char ch)
 }
 
 static int
-add(PrefixTree *self, const char *word, union _pt_data data, char type)
+add(PrefixTree *self, const char *word, union _pt_data data, int type)
 {
 	int rc = 0;
 	PrefixTree *node = self;
@@ -218,7 +218,7 @@ pt_data_p(const PrefixTree *self)
 	return self->data.p;
 }
 
-char
+int
 pt_data_type(const PrefixTree *self)
 {
 	return self->type;
