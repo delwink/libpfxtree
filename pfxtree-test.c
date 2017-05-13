@@ -43,6 +43,8 @@ main(void)
 	assert(0 == pt_add_p(p, "hello", dummy));
 	assert('p' == pt_data_type(pt_search(p, "hello")));
 
+        assert(PT_ENOWORD == pt_del(p, "asdf"));
+
 	pt_deep_free(p, true);
 	return 0;
 }
