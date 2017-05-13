@@ -30,16 +30,13 @@ implementation since it follows Delwink's standards and development styles.
 Build
 -----
 
-You'll need a C compiler, the GNU Autotools, and libtool. On Debian-based
-systems, you can get these with:
+You'll need a C99 compiler and a POSIX build environment. On Debian-based
+systems, you can get this with:
 
-    # apt-get install build-essential automake autoconf libtool
+    # apt-get install build-essential
 
-libpfxtree uses the GNU build process. You can compile it with the following
-steps:
+libpfxtree uses a simple build process. You can compile it like so:
 
-    $ ./autogen.sh
-	$ ./configure
 	$ make
 
 Install
@@ -52,10 +49,7 @@ After building (see above), you can install the library with this:
 Hacking
 -------
 
-libpfxtree uses the GNU coding style for C and follows a strict 79-column limit
-in its source code. Indentations are two spaces, and tab characters are eight
-spaces. It is polite to use a tab character any time eight spaces would be used
-to indent, but it is not required.
+Match the style you see in the source code. Do not use spaces for indentation.
 
 To submit a patch, [submit your diff to Delwink][1], or use GitHub's pull
 request system.
