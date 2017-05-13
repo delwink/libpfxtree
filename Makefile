@@ -8,7 +8,7 @@ HDIR=$(DESTDIR)$(PREFIX)/include
 MAJOR=0
 MINOR=3
 REVISION=0
-VERSION=$(MAJOR).$(MINOR).$(REVISION
+VERSION=$(MAJOR).$(MINOR).$(REVISION)
 
 all: libpfxtree.so libpfxtree.a
 
@@ -30,5 +30,5 @@ install: libpfxtree.so
 	install -m755 libpfxtree.so $(LIBDIR)/libpfxtree.so.$(VERSION)
 	install -m644 pfxtree.h $(HDIR)/pfxtree.h
 	install -m644 pfxtree.pc $(PKGCONFIGDIR)/pfxtree.pc
-	ln -s $(LIBDIR)/libpfxtree.so.$(VERSION) $(LIBDIR)/libpfxtree.so.$(MAJOR)
-	ln -s $(LIBDIR)/libpfxtree.so.$(VERSION) $(LIBDIR)/libpfxtree.so
+	ln -sf $(LIBDIR)/libpfxtree.so.$(VERSION) $(LIBDIR)/libpfxtree.so.$(MAJOR)
+	ln -sf $(LIBDIR)/libpfxtree.so.$(VERSION) $(LIBDIR)/libpfxtree.so
