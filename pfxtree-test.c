@@ -1,6 +1,6 @@
 /*
  *  pfxtree-test - Delwink prefix tree library unit test
- *  Copyright (C) 2017 Delwink, LLC
+ *  Copyright (C) 2017, 2020 Delwink, LLC
  *
  * Redistributions, modified or unmodified, in whole or in part, must retain
  * applicable copyright or other legal privilege notices, these conditions, and
@@ -59,10 +59,12 @@ main(void)
 	assert(NULL == pt_search(p, "hello"));
 	assert(pt_search(p, "hell") != NULL);
 
-	void *dummy = malloc(0xDFDF);
-	assert(dummy != NULL);
-	assert(0 == pt_add_p(p, "hello", dummy));
-	assert('p' == pt_data_type(pt_search(p, "hello")));
+	{
+		void *dummy = malloc(0xDFDF);
+		assert(dummy != NULL);
+		assert(0 == pt_add_p(p, "hello", dummy));
+		assert('p' == pt_data_type(pt_search(p, "hello")));
+	}
 
 	assert(PT_ENOWORD == pt_del(p, "asdf"));
 

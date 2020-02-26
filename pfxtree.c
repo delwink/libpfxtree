@@ -1,6 +1,6 @@
 /*
  *  libpfxtree - Delwink prefix tree library
- *  Copyright (C) 2015, 2017 Delwink, LLC
+ *  Copyright (C) 2015, 2017, 2020 Delwink, LLC
  *
  * Redistributions, modified or unmodified, in whole or in part, must retain
  * applicable copyright or other legal privilege notices, these conditions, and
@@ -113,7 +113,7 @@ static int
 add(PrefixTree *self, const char *word, union _pt_data data, int type)
 {
 	int rc = 0;
-	PrefixTree *node = self;
+	PrefixTree *node = self, *first_insertion = NULL;
 	size_t i, len = strlen(word);
 
 	for (i = 0; i <= len; ++i)
@@ -125,11 +125,9 @@ add(PrefixTree *self, const char *word, union _pt_data data, int type)
 		node = child;
 	}
 
-	PrefixTree *first_insertion = NULL;
-
 	for (; i <= len; ++i)
 	{
-		PrefixTree *new = pt_new();
+		PrefixTree *new = pt_new(), *end;
 		if (!new)
 		{
 			rc = PT_EALLOC;
@@ -139,7 +137,7 @@ add(PrefixTree *self, const char *word, union _pt_data data, int type)
 		new->ch = word[i];
 		new->parent = node;
 
-		PrefixTree *end = get_last_child(node);
+		end = get_last_child(node);
 		if (!end)
 			node->children = new;
 		else
@@ -182,10 +180,11 @@ pt_add_p(PrefixTree *self, const char *word, void *data)
 static size_t
 num_children(PrefixTree *self)
 {
+	size_t i;
+
 	if (!self->children)
 		return 0;
 
-	size_t i;
 	self = self->children;
 	for (i = 1; self->next; ++i)
 		self = self->next;

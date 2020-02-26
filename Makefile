@@ -1,5 +1,7 @@
-CC=c99
-CFLAGS=-Wall -Wextra -Wunreachable-code -ftrapv -fPIC -g -D_POSIX_C_SOURCE=2
+CC ?= cc
+STND ?= -ansi -pedantic
+CFLAGS += $(STND) -O2 -Wall -Wextra -Wunreachable-code -ftrapv -fPIC \
+	-D_POSIX_C_SOURCE=2
 PREFIX=/usr/local
 LIBDIR=$(DESTDIR)$(PREFIX)/lib
 PKGCONFIGDIR=$(LIBDIR)/pkgconfig
@@ -29,7 +31,6 @@ test: pfxtree-test
 install: libpfxtree.so
 	install -m755 libpfxtree.so $(LIBDIR)/libpfxtree.so.$(VERSION)
 	install -m644 pfxtree.h $(HDIR)/pfxtree.h
-	install -m644 pfxtree.pc $(PKGCONFIGDIR)/pfxtree.pc
 	ln -sf $(LIBDIR)/libpfxtree.so.$(VERSION) $(LIBDIR)/libpfxtree.so.$(MAJOR)
 	ln -sf $(LIBDIR)/libpfxtree.so.$(VERSION) $(LIBDIR)/libpfxtree.so
 
