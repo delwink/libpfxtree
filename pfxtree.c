@@ -61,6 +61,34 @@ pt_new()
 	return self;
 }
 
+static int
+copy(const struct pt_entry *entry, void *data)
+{
+	PrefixTree *tree = (PrefixTree *) data;
+	const char *word = entry->word;
+
+	if (entry->type == PT_TYPE_INT)
+		return pt_add(tree, word, entry->data.i);
+
+	return pt_add_p(tree, word, entry->data.p);
+}
+
+PrefixTree *
+pt_copy(const PrefixTree *src)
+{
+	PrefixTree *new = pt_new();
+	if (!new)
+		return NULL;
+
+	if (pt_foreach(src, copy, new))
+	{
+		pt_free(new);
+		return NULL;
+	}
+
+	return new;
+}
+
 void
 pt_free(PrefixTree *self)
 {
@@ -355,5 +383,5 @@ end:
 const char *
 pt_version()
 {
-	return "0.3.0";
+	return "0.4.0";
 }

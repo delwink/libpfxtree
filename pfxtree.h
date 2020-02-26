@@ -103,6 +103,14 @@ PrefixTree *
 pt_new(void);
 
 /**
+ * @brief Copies a prefix tree.
+ * @param src The prefix tree to be copied.
+ * @return The copied tree, or NULL on failure.
+ */
+PrefixTree *
+pt_copy(const PrefixTree *src);
+
+/**
  * @brief Frees an allocated prefix tree (and its child nodes).
  * @param self The tree to free.
  */

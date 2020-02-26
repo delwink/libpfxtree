@@ -55,7 +55,7 @@ check_entry(const struct pt_entry *entry, void *data)
 int
 main(void)
 {
-	PrefixTree *p = pt_new();
+	PrefixTree *p = pt_new(), *p2;
 	void *dummy;
 	assert(p != NULL);
 
@@ -71,7 +71,7 @@ main(void)
 	assert(NULL == pt_search(p, "hello"));
 	assert(pt_search(p, "hell") != NULL);
 
-	dummy = malloc(0xDFDF);
+	dummy = malloc(16);
 	assert(dummy != NULL);
 	assert(0 == pt_add_p(p, "hello", dummy));
 	assert(PT_TYPE_PTR == pt_data_type(pt_search(p, "hello")));
@@ -80,6 +80,11 @@ main(void)
 
 	pt_foreach(p, check_entry, dummy);
 
+	p2 = pt_copy(p);
+	assert(p2 != NULL);
+	assert(pt_data_p(pt_search(p2, "hello")) == dummy);
+
 	pt_deep_free(p, true);
+	pt_deep_free(p2, false);
 	return 0;
 }
