@@ -38,35 +38,47 @@
 
 #include <assert.h>
 #include <stdbool.h>
+#include <stdio.h>
 #include <stdlib.h>
 
 #include "pfxtree.h"
+
+static int
+check_entry(const struct pt_entry *entry, void *data)
+{
+	if (PT_TYPE_PTR == entry->type)
+		assert(entry->data.p == data);
+
+	return 0;
+}
 
 int
 main(void)
 {
 	PrefixTree *p = pt_new();
+	void *dummy;
 	assert(p != NULL);
 
 	assert(0 == pt_add(p, "hello", 1));
 	assert(0 == pt_add(p, "world", 2));
+	assert(0 == pt_add(p, "henlo", 3));
 	assert(0 == pt_add(p, "hell", -1));
 
-	assert('i' == pt_data_type(pt_search(p, "hell")));
+	assert(PT_TYPE_INT == pt_data_type(pt_search(p, "hell")));
 	assert(-1 == pt_data(pt_search(p, "hell")));
 
 	assert(0 == pt_del(p, "hello"));
 	assert(NULL == pt_search(p, "hello"));
 	assert(pt_search(p, "hell") != NULL);
 
-	{
-		void *dummy = malloc(0xDFDF);
-		assert(dummy != NULL);
-		assert(0 == pt_add_p(p, "hello", dummy));
-		assert('p' == pt_data_type(pt_search(p, "hello")));
-	}
+	dummy = malloc(0xDFDF);
+	assert(dummy != NULL);
+	assert(0 == pt_add_p(p, "hello", dummy));
+	assert(PT_TYPE_PTR == pt_data_type(pt_search(p, "hello")));
 
 	assert(PT_ENOWORD == pt_del(p, "asdf"));
+
+	pt_foreach(p, check_entry, dummy);
 
 	pt_deep_free(p, true);
 	return 0;

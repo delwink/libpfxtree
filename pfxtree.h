@@ -1,6 +1,6 @@
 /*
  *  libpfxtree - Delwink prefix tree library
- *  Copyright (C) 2015, 2017 Delwink, LLC
+ *  Copyright (C) 2015, 2017, 2020 Delwink, LLC
  *
  * Redistributions, modified or unmodified, in whole or in part, must retain
  * applicable copyright or other legal privilege notices, these conditions, and
@@ -38,8 +38,8 @@
 
 /**
  * @file pfxtree.h
- * @version 0.3
- * @date 5/12/2017
+ * @version 0.4
+ * @date 2/25/2020
  * @author David McMackins II
  * @brief Delwink prefix tree (trie) library
  */
@@ -59,6 +59,12 @@
 
 __BEGIN_DECLS
 
+enum pt_data_type
+{
+	PT_TYPE_INT,
+	PT_TYPE_PTR
+};
+
 /**
  * @brief Error codes possibly returned by functions in this library.
  */
@@ -68,7 +74,7 @@ enum pt_error
 	PT_ENOWORD = -2
 };
 
-union _pt_data
+union pt_data
 {
 	int i;
 	void *p;
@@ -79,13 +85,14 @@ union _pt_data
  */
 typedef struct _pt_trie
 {
-	int ch;
-	int type;
-	union _pt_data data;
+	union pt_data data;
 
 	struct _pt_trie *parent;
 	struct _pt_trie *children;
 	struct _pt_trie *next;
+
+	int ch;
+	enum pt_data_type type;
 } PrefixTree;
 
 /**
@@ -172,6 +179,25 @@ pt_data_type(const PrefixTree *self);
  */
 const PrefixTree *
 pt_search(const PrefixTree *root, const char *word);
+
+struct pt_entry
+{
+	const char *word;
+	union pt_data data;
+	enum pt_data_type type;
+};
+
+/**
+ * @brief Run an operation for each word in a prefix tree.
+ * @param root The node from which to begin the search.
+ * @param f The operation to be run, accepting the word, its data, and
+ *          and arbitrary data; returns nonzero to break the loop.
+ * @param data Data to be passed to f.
+ * @return Nonzero on error, or nonzero return from f.
+ */
+int
+pt_foreach(const PrefixTree *root, int (*f)(const struct pt_entry *,void *),
+	void *data);
 
 /**
  * @brief Checks the current version of the library.

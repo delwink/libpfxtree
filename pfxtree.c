@@ -73,7 +73,8 @@ pt_deep_free(PrefixTree *self, bool free_data)
 	PrefixTree *child, *next = NULL;
 	for (child = self->children; child != NULL; child = next)
 	{
-		if (free_data && 'p' == child->type && child->data.p != NULL)
+		if (free_data && PT_TYPE_PTR == child->type
+			&& child->data.p != NULL)
 			free(child->data.p);
 
 		next = child->next;
@@ -110,7 +111,8 @@ get_child_by_ch(const PrefixTree *self, const int ch)
 }
 
 static int
-add(PrefixTree *self, const char *word, union _pt_data data, int type)
+add(PrefixTree *self, const char *word, union pt_data data,
+	enum pt_data_type type)
 {
 	int rc = 0;
 	PrefixTree *node = self, *first_insertion = NULL;
@@ -164,17 +166,17 @@ add(PrefixTree *self, const char *word, union _pt_data data, int type)
 int
 pt_add(PrefixTree *self, const char *word, int data)
 {
-	union _pt_data d;
+	union pt_data d;
 	d.i = data;
-	return add(self, word, d, 'i');
+	return add(self, word, d, PT_TYPE_INT);
 }
 
 int
 pt_add_p(PrefixTree *self, const char *word, void *data)
 {
-	union _pt_data d;
+	union pt_data d;
 	d.p = data;
-	return add(self, word, d, 'p');
+	return add(self, word, d, PT_TYPE_PTR);
 }
 
 static size_t
@@ -262,6 +264,92 @@ pt_search(const PrefixTree *root, const char *word)
 	}
 
 	return NULL;
+}
+
+static const PrefixTree *
+delve(const PrefixTree *node, char **bufptr, size_t *bufsize, size_t *i)
+{
+	while (node->children)
+	{
+		char *buf = *bufptr;
+
+		node = node->children;
+		buf[(*i)++] = node->ch;
+		if (*i >= *bufsize)
+		{
+			char *temp;
+			*bufsize += 32;
+			temp = realloc(*bufptr, *bufsize);
+			if (!temp)
+				return NULL;
+
+			*bufptr = temp;
+		}
+	}
+
+	return node;
+}
+
+int
+pt_foreach(const PrefixTree *root, int (*f)(const struct pt_entry *,void *),
+	void *data)
+{
+	int rc = 0;
+	char *buf;
+	size_t i = 0, bufsize = 32;
+	const PrefixTree *node;
+	struct pt_entry entry;
+
+	if (!root)
+		return rc;
+
+	buf = malloc(bufsize);
+	if (!buf)
+		return PT_EALLOC;
+
+	node = delve(root, &buf, &bufsize, &i);
+	if (!node)
+	{
+		rc = PT_EALLOC;
+		goto end;
+	}
+
+	while (node->parent)
+	{
+		PrefixTree *temp;
+
+		if ('\0' == node->ch)
+		{
+			entry.word = buf;
+			entry.type = node->type;
+			entry.data = node->data;
+
+			rc = f(&entry, data);
+			if (rc)
+				goto end;
+		}
+
+		--i;
+		temp = node->next;
+		if (temp)
+		{
+			buf[i++] = temp->ch;
+			node = delve(temp, &buf, &bufsize, &i);
+			if (!node)
+			{
+				rc = PT_EALLOC;
+				goto end;
+			}
+		}
+		else
+		{
+			node = node->parent;
+		}
+	}
+
+end:
+	free(buf);
+	return rc;
 }
 
 const char *
