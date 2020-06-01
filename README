@@ -30,10 +30,10 @@ implementation since it follows Delwink's standards and development styles.
 Build
 -----
 
-You'll need a C99 compiler and a POSIX build environment. On Debian-based
+You'll need an ANSI C compiler and a POSIX build environment. On Debian-based
 systems, you can get this with:
 
-    # apt-get install build-essential
+    # apt install build-essential
 
 libpfxtree uses a simple build process. You can compile it like so:
 
