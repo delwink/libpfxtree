@@ -15,14 +15,16 @@ registry. New words are added to the dictionary, and the dictionary is searched
 one letter at a time to find the quickest route to the end of the desired word,
 as opposed to checking string equality for each string in the dictionary which
 is slow and inefficient on the CPU. Trie structures can be more memory
-efficient that a static string dictionary as well, because any words that share
+efficient than a static string dictionary as well, because any words that share
 the same starting characters (prefix) will share the same memory for those
 characters. This does come at a cost for dictionaries with words that are
 nothing alike, because each character in the dictionary is more than 1 byte (32
 bytes each on my implementation) since it must keep track of what characters
-are adjacent to it, and this implementation of the structure allows storage of
-one integer as data for complete words (used in LiberTI's encoder to determine
-which token to replace the keyword with).
+are adjacent to it.
+
+This implementation of the structure allows storage of one integer as data for
+complete words (used in LiberTI's encoder to determine which token to replace
+the keyword with) or a pointer to arbitrary data.
 
 Many implementations of this structure exist, but this is Delwink's preferred
 implementation since it follows Delwink's standards and development styles.
@@ -37,7 +39,7 @@ systems, you can get this with:
 
 libpfxtree uses a simple build process. You can compile it like so:
 
-	$ make
+    $ make
 
 Install
 -------
@@ -57,7 +59,7 @@ request system.
 License
 -------
 
-libpfxtree is free software, released under the terms of version 0.5 of the
+libpfxtree is free software, released under the terms of version 1.0 of the
 Copyfree Open Innovation License. You are free to copy, modify, and
 redistribute this software and use it for whatever purpose. See
 [COPYING](COPYING) for more details.
